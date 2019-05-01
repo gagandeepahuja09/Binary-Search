@@ -1,39 +1,39 @@
-bool isPossible(vector<int>& A, int paint, long currMin) {
-    long currSum = 0, count = 1;
-    for(int i=0; i < A.size(); i++) {
-        if(A[i] > currMin)
-            return false;
-    }
-    for(int i = 0; i < A.size(); ) {
-        if(currSum + (long)(A[i]) > currMin) {
-            count++;
-            currSum;
-        }
-        else {
-            currSum = currSum + (long)(A[i]);
-            i++;
+#define ll long long int
+#define MOD 10000003
+
+bool isPossible(vector<int>& A, ll paint, int k) {
+    ll sum = 0;
+    for(int i = 0; i < A.size(); i++) {
+        sum += A[i];
+        if(sum > paint) {
+            k--;
+            sum = A[i];
         }
     }
-    if(count <= paint)
-        return true;
-    return false;    
+    if(sum > paint)
+        k--;
+    return k > 0;
 }
 
-int Solution::paint(int K, int T, vector<int> &A) {
-    long low = 0, high = 0;
-    for(int i=0; i<A.size(); i++) {
-        high += A[i];
+int Solution::paint(int A, int B, vector<int> &C) {
+    ll l = INT_MIN, h = 0;
+    for(int i = 0; i < C.size(); i++) {
+        l = max(l, (ll)C[i]);
+        h += C[i];
     }
-    long res = INT_MAX;
-    while(low <= high) {
-        long mid = (low + high) / 2;
-        if(isPossible(A, K, mid)) {
-            res = min(res, mid);
-            high = mid - 1;
+    while(l <= h) {
+        ll mid = l + (h - l) / 2;
+        if(isPossible(C, mid, A) && !isPossible(C, mid - 1, A)) {
+            ll ans = (B % MOD *  mid % MOD) % MOD;
+            return (int)ans;
         }
+        else if(!isPossible(C, mid, A))
+            l = mid + 1;
         else
-            low = mid + 1;
+            h = mid - 1;
     }
-    return (int)((res * (long)T) % 10000003);
+    //cout << l << " ";
+    ll ans = (B % MOD *  l % MOD) % MOD;
+    return (int)ans;
 }
 
