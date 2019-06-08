@@ -32,7 +32,6 @@ int Solution::paint(int A, int B, vector<int> &C) {
         else
             h = mid - 1;
     }
-    //cout << l << " ";
     ll ans = (B % MOD *  l % MOD) % MOD;
     return (int)ans;
 }
