@@ -1,33 +1,39 @@
-int bSearch(const vector<int>& A, int l, int h, int B) {
+int rotationIndex(const vector<int>& A) {
+    int l = 0, h = A.size() - 1;
+    while(l < h) {
+        int mid = l + (h - l) / 2;
+        if(mid + 1 < A.size() && A[mid] > A[mid + 1])
+            return mid;
+        if(mid > 0 && A[mid] < A[mid - 1])
+            return mid - 1;
+        if(A[l] >= A[mid])
+            h = mid - 1;
+        else
+            l = mid + 1;
+    }
+    return h;
+}
+
+int bSearch(const vector<int>& A, int l, int h, int k) {
     while(l <= h) {
         int mid = l + (h - l) / 2;
-        if(A[mid] == B)
+        if(A[mid] == k) {
             return mid;
-        else if(A[mid] < B)
-            l = mid + 1;
-        else
+        }
+        if(A[mid] > k)
             h = mid - 1;
+        else
+            l = mid + 1;
     }
     return -1;
 }
 
 int Solution::search(const vector<int> &A, int B) {
-    int l = 0, n = A.size(), h = n - 1, idx = h;
-    while(l <= h) {
-        int mid = l + (h - l) / 2;
-        if(mid != n - 1 && A[mid] > A[mid + 1]) {
-            idx = mid;
-            break;
-        }
-        else if(A[mid] > A[n - 1]) {
-            l = mid + 1;
-        }
-        else
-            h = mid - 1;
-    }
-    if(B >= A[0] && B <= A[idx])
-        return bSearch(A, 0, idx, B);
-    else
-        return bSearch(A, idx + 1, n - 1, B);
+    int pivot = rotationIndex(A);
+    int l = 0;
+    int index = bSearch(A, l, pivot, B);
+    if(index != -1)
+        return index;
+    return bSearch(A, pivot + 1, A.size() - 1, B);    
 }
 
