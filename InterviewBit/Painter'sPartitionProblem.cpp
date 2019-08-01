@@ -1,18 +1,19 @@
 #define ll long long int
 #define MOD 10000003
 
-bool isPossible(vector<int>& A, ll paint, int k) {
-    ll sum = 0;
-    for(int i = 0; i < A.size(); i++) {
-        sum += A[i];
-        if(sum > paint) {
-            k--;
-            sum = A[i];
+bool isPossible(vector<int>& v, ll paint, int k) {
+    int cnt = 0;
+    ll currPaint = 0;
+    for(int i = 0; i < v.size(); i++) {
+        currPaint += v[i];
+        if(currPaint > paint) {
+            cnt++;
+            currPaint = v[i];
         }
     }
-    if(sum > paint)
-        k--;
-    return k > 0;
+    if(currPaint > paint)
+        cnt++;
+    return (cnt < k);
 }
 
 int Solution::paint(int A, int B, vector<int> &C) {
@@ -22,17 +23,14 @@ int Solution::paint(int A, int B, vector<int> &C) {
         h += C[i];
     }
     while(l <= h) {
-        ll mid = l + (h - l) / 2;
-        if(isPossible(C, mid, A) && !isPossible(C, mid - 1, A)) {
-            ll ans = (B % MOD *  mid % MOD) % MOD;
-            return (int)ans;
+        ll m = l + (h - l) / 2;
+        if(isPossible(C, m, A)) {
+            h = m - 1;
         }
-        else if(!isPossible(C, mid, A))
-            l = mid + 1;
-        else
-            h = mid - 1;
+        else {
+            l = m + 1;
+        }
     }
-    ll ans = (B % MOD *  l % MOD) % MOD;
-    return (int)ans;
+    return (int)((l % MOD * B % MOD) % MOD);
 }
 
