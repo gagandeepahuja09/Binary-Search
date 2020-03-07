@@ -1,24 +1,28 @@
-#define ll long long int
-
 class Solution {
 public:
-    int countSmall(int mid, int n, int m) {
+    int countSmaller(int m, int n, int val) {
         int count = 0;
-        for(int i = 1; i <= n; i++) {
-            count += min(mid / i, m);
+        for(int i = 1; i <= m; i++) {
+            int cs = val / i;
+            if(val % i == 0)
+                cs--;
+            count += min(n, cs);
         }
         return count;
     }
     
     int findKthNumber(int m, int n, int k) {
-        int l = 1, h = m * n;
-        while(l < h) {
-            int mid = (l + h) / 2;
-            if(countSmall(mid, m, n) < (ll)k)
-                l = mid + 1;
-            else
-                h = mid;
+        int low = 1, high = m * n, ans = 1;
+        while(low <= high) {
+            int mid = low + (high - low) / 2;
+            if(countSmaller(m, n, mid) < k) {
+                ans = mid;
+                low = mid + 1;
+            }
+            else {
+                high = mid - 1;
+            }
         }
-        return l;
+        return ans;
     }
 };
